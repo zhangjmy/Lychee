@@ -181,6 +181,11 @@ final class Album {
 
 	}
 
+	public  function  getList(){
+	    $res = $this->get();
+	    return $res['content'];
+    }
+
 	/**
 	 * Starts a download of an album.
 	 * @return resource|boolean Sends a ZIP-file or returns false on failure.

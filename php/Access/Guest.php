@@ -20,6 +20,7 @@ final class Guest extends Access {
 
 			// Album functions
 			case 'Album::get':        self::getAlbumAction(); break;
+            case 'Album::getNoPass':  self::getAlbumActionNoPass(); break;
 			case 'Album::getPublic':  self::checkAlbumAccessAction(); break;
 
 			// Photo functions
@@ -71,6 +72,32 @@ final class Guest extends Access {
 		}
 
 	}
+
+
+
+	// Album functions
+
+	private static function getAlbumActionNoPass() {
+
+		Validator::required(isset($_GET['albumID'], $_GET['password']), __METHOD__);
+
+		$album = new Album($_GET['albumID']);
+
+		if ($album->getPublic()===true) {
+
+			// Album public
+			if ($album->checkPassword($_GET['password'])===true) Response::json($album->getList());
+			else                                                  Response::warning('Wrong password!');
+
+		} else {
+
+			// Album private
+			Response::warning('Album private!');
+
+		}
+
+	}
+
 
 	private static function checkAlbumAccessAction() {
 
